@@ -1,2 +1,10 @@
 test_trainer
-resources/*.jsonl
+
+cached*
+resources/clickbait
+tune/t*
+models
+resources/fake_news/AllFake/*
+resources/click_bait/*
+!resources/click_bait/click_bait_phrases.json
+!resources/click_bait/read_baits.py
