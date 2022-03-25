@@ -6,11 +6,11 @@ from transformers import TextDataset, DataCollatorForLanguageModeling
 from transformers import Trainer, TrainingArguments, AutoModelWithLMHead
 
 # Define the paths where the datasets will be stored for the models
-train_path = 'train_dataset.txt'
-test_path = 'test_dataset.txt'
+train_path = 'train_dataset_click.txt'
+test_path = 'test_dataset_click.txt'
 
 # Load the clickbait phrases
-with open('../resources/click_bait/click_bait_phrases.json') as f:
+with open('../resources/click_bait/click_bait_phrases.json', "r") as f:
     data = json.load(f)
 
 # Tokenizer to be used
@@ -37,7 +37,7 @@ def load_dataset(train_path, test_path, tokenizer):
 
 # Function to save the files with the format we need
 def build_text_files(data_json, dest_path):
-    f = open(dest_path, 'w')
+    f = open(dest_path, 'w', encoding='utf-8')
     data = ''
     for texts in data_json:
 
