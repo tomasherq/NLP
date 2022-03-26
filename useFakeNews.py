@@ -5,7 +5,7 @@ from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
 # Create a news article from a clickbait title?
 
 initialText = 'Pool party gone wrong.'
-MAX_LENGTH = 200
+MAX_LENGTH = 500
 
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 model = TFGPT2LMHeadModel.from_pretrained("./models/fake_news", pad_token_id=tokenizer.eos_token_id, from_pt=True)
@@ -14,7 +14,7 @@ model = TFGPT2LMHeadModel.from_pretrained("./models/fake_news", pad_token_id=tok
 # encode context the generation is conditioned on
 input_ids = tokenizer.encode(initialText, return_tensors='tf')
 
-tf.random.set_seed(0)
+tf.random.set_seed(10)
 
 
 # generate text until the output length (which includes the context length) reaches 50
@@ -33,11 +33,13 @@ initialText = initialText
 sample_outputs = model.generate(
     input_ids,
     do_sample=True,
-    top_k=50
+    max_length=MAX_LENGTH,
+    top_k=50,
+    num_return_sequences=5
 )
 
 
-# # Top p
+# Top p
 # sample_outputs = model.generate(
 #     input_ids,
 #     do_sample=True,

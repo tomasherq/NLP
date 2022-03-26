@@ -4,7 +4,7 @@ from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
 
 # Create a news article from a clickbait title?
 
-initialText = 'Pool party gone wrong.'
+initialText = 'Pool party gone wrong.[My gf goes mad]'
 MAX_LENGTH = 200
 
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
@@ -29,13 +29,13 @@ tf.random.set_seed(0)
 
 initialText = initialText
 
-# Top k
-sample_outputs = model.generate(
-    input_ids,
-    do_sample=True,
-    max_length=MAX_LENGTH,
-    top_k=50
-)
+# # Top k
+# sample_outputs = model.generate(
+#     input_ids,
+#     do_sample=True,
+#     max_length=MAX_LENGTH,
+#     top_k=50
+# )
 
 
 # Top p
@@ -51,4 +51,4 @@ sample_outputs = model.generate(
 
 print("Output:\n" + 100 * '-')
 for i, beam_output in enumerate(sample_outputs):
-    print("{}: {}".format(i, tokenizer.decode(beam_output, skip_special_tokens=True)))
+    print("{}: {}".format(i, tokenizer.decode(beam_output, skip_special_tokens=False)))
