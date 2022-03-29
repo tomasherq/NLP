@@ -1,11 +1,15 @@
 import tensorflow as tf
 from transformers import pipeline
 from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
+import sys
+
 
 # Create a news article from a clickbait title?
 
 initialText = 'Pool party gone wrong.[My gf goes mad]'
-MAX_LENGTH = 200
+
+if len(sys.argv) < 2:
+    MAX_LENGTH = sys.argv[1]
 
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 model = TFGPT2LMHeadModel.from_pretrained("./models/click_bait", pad_token_id=tokenizer.eos_token_id, from_pt=True)

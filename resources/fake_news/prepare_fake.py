@@ -3,7 +3,7 @@ import csv
 from textwrap import indent
 import os
 texts = []
-DIRECTORY_NEWS = "AllFake"
+DIRECTORY_NEWS = "total"
 
 # Read from one dataset
 for filename in os.listdir(DIRECTORY_NEWS):

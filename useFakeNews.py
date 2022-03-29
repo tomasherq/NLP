@@ -5,7 +5,7 @@ from transformers import TFGPT2LMHeadModel, GPT2Tokenizer
 # Create a news article from a clickbait title?
 
 initialText = 'Pool party gone wrong.'
-MAX_LENGTH = 500
+MAX_LENGTH = [20, 50, 100, 200, 300]
 
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 model = TFGPT2LMHeadModel.from_pretrained("./models/fake_news", pad_token_id=tokenizer.eos_token_id, from_pt=True)
