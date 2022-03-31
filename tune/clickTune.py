@@ -1,5 +1,8 @@
 import re
 import json
+
+from datasets import load_metric
+import numpy as np
 from sklearn.model_selection import train_test_split
 from transformers import AutoTokenizer
 from transformers import TextDataset, DataCollatorForLanguageModeling
@@ -48,7 +51,17 @@ def build_text_files(data_json, dest_path):
     f.write(data)
 
 
-train, test = train_test_split(data, test_size=0.15)
+def compute_metrics(eval_pred):
+
+    metric = load_metric("accuracy")
+
+    logits, labels = eval_pred
+
+    predictions = np.argmax(logits, axis=-1)
+
+    return metric.compute(predictions=predictions, references=labels)
+
+train, test = train_test_split(data, test_size=0.3)
 build_text_files(train, train_path)
 build_text_files(test, test_path)
 
@@ -75,6 +88,7 @@ trainer = Trainer(
     data_collator=data_collator,
     train_dataset=train_dataset,
     eval_dataset=test_dataset,
+    compute_metrics=compute_metrics,
 )
 
 trainer.train()
