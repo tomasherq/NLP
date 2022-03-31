@@ -10,7 +10,7 @@ train_path = 'train_dataset.txt'
 test_path = 'test_dataset.txt'
 
 # Load the clickbait phrases
-with open('../resources/fake_news/fake_news.json') as f:
+with open('../resources/fake_news/fake_news.json', encoding="utf-8") as f:
     data = json.load(f)
 
 # Tokenizer to be used
@@ -37,7 +37,7 @@ def load_dataset(train_path, test_path, tokenizer):
 
 # Function to save the files with the format we need
 def build_text_files(data_json, dest_path):
-    f = open(dest_path, 'w')
+    f = open(dest_path, 'w' , encoding="utf-8")
     data = ''
     for text in data_json:
 

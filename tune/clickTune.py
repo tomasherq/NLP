@@ -1,16 +1,19 @@
 import re
 import json
+
+from datasets import load_metric
+import numpy as np
 from sklearn.model_selection import train_test_split
 from transformers import AutoTokenizer
 from transformers import TextDataset, DataCollatorForLanguageModeling
 from transformers import Trainer, TrainingArguments, AutoModelWithLMHead
 
 # Define the paths where the datasets will be stored for the models
-train_path = 'train_dataset.txt'
-test_path = 'test_dataset.txt'
+train_path = 'train_dataset_click.txt'
+test_path = 'test_dataset_click.txt'
 
 # Load the clickbait phrases
-with open('../resources/click_bait/click_bait_phrases.json') as f:
+with open('../resources/click_bait/click_bait_phrases.json', "r") as f:
     data = json.load(f)
 
 # Tokenizer to be used
@@ -37,7 +40,7 @@ def load_dataset(train_path, test_path, tokenizer):
 
 # Function to save the files with the format we need
 def build_text_files(data_json, dest_path):
-    f = open(dest_path, 'w')
+    f = open(dest_path, 'w', encoding='utf-8')
     data = ''
     for texts in data_json:
 
@@ -46,6 +49,17 @@ def build_text_files(data_json, dest_path):
             summary = re.sub(r"\s", " ", summary)
             data += summary + "  "
     f.write(data)
+
+
+def compute_metrics(eval_pred):
+
+    metric = load_metric("accuracy")
+
+    logits, labels = eval_pred
+
+    predictions = np.argmax(logits, axis=-1)
+
+    return metric.compute(predictions=predictions, references=labels)
 
 
 train, test = train_test_split(data, test_size=0.3)
@@ -75,6 +89,7 @@ trainer = Trainer(
     data_collator=data_collator,
     train_dataset=train_dataset,
     eval_dataset=test_dataset,
+    compute_metrics=compute_metrics,
 )
 
 trainer.train()

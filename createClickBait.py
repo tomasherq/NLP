@@ -7,7 +7,7 @@ import os
 
 if len(sys.argv) < 2:
     print("Introduce the length of the phrases.")
-    exit()
+    exit(1)
 
 MAX_LENGTH = (sys.argv[1])
 
@@ -18,8 +18,8 @@ if not os.path.exists(directoryOutput):
 
 filename = len(os.listdir(directoryOutput))+1
 
-if(filename > 1000):
-    exit()
+if filename > 1000:
+    exit(1)
 
 
 with open("resources/starters/used_phrases.json", "r") as file_read:
@@ -47,6 +47,7 @@ model = TFGPT2LMHeadModel.from_pretrained("./models/click_bait", pad_token_id=to
 input_ids = tokenizer.encode(initialText, return_tensors='tf')
 
 initialText = initialText
+
 
 # Top p
 sample_outputs = model.generate(
