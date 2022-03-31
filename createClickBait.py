@@ -12,11 +12,6 @@ directoryOutput = f'output_phrases/{MAX_LENGTH}'
 if not os.path.exists(directoryOutput):
     os.makedirs(directoryOutput)
 
-filename = len(os.listdir(directoryOutput))+1
-
-if filename > 1000:
-    exit(1)
-
 
 with open("resources/starters/used_phrases.json", "r") as file_read:
     used_phrases = json.load(file_read)
@@ -32,6 +27,12 @@ tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 model = TFGPT2LMHeadModel.from_pretrained("./models/click_bait", pad_token_id=tokenizer.eos_token_id, from_pt=True)
 
 while i < 1000:
+
+    filename = len(os.listdir(directoryOutput))+1
+
+    if filename > 1000:
+        exit(1)
+
     initialText = ''
     with open("resources/starters/starters.txt", "r") as file_read:
 

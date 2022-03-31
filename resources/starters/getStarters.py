@@ -9,7 +9,7 @@ with open("../fake_news/fake_news.json", "r") as file_read:
     for phrase in phrases:
         sentences = phrase.split(".")
         for sentence in sentences:
-            words = (sentence.strip().split(" ")[:7])
+            words = (sentence.strip().split(" ")[:3])
             new_words = list()
             for word in words:
                 new_word = ""
@@ -18,9 +18,11 @@ with open("../fake_news/fake_news.json", "r") as file_read:
                         new_word += character
                 if new_word != '':
                     new_words.append(new_word)
+            new_words.sort()
+            if len(new_words) == 3:
+                if new_words not in starters:
 
-            if len(new_words) == 7:
-                starters.append(new_words)
+                    starters.append(new_words)
 
 
 with open("starters.txt", "w") as file_write:
