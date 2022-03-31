@@ -5,6 +5,7 @@ resources/clickbait
 tune/t*
 models
 resources/fake_news/AllFake/*
+resources/fake_news/total/*
 resources/click_bait/*
 !resources/click_bait/click_bait_phrases.json
 !resources/click_bait/read_baits.py
