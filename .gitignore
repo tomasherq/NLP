@@ -10,5 +10,9 @@ resources/click_bait/*
 !resources/click_bait/click_bait_phrases.json
 !resources/click_bait/read_baits.py
 output_phrases
-/.idea/*
+.idea
 venv
+!resources/click_bait/click_bait_phrases.json
+!resources/click_bait/evaluate_clickbait.csv
+output_phrases
+resources/starters/used_phrases.json
