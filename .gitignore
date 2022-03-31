@@ -8,6 +8,7 @@ resources/fake_news/AllFake/*
 resources/fake_news/total/*
 resources/click_bait/*
 !resources/click_bait/click_bait_phrases.json
-!resources/click_bait/read_baits.py
+!resources/click_bait/click_bait_phrases.json
+!resources/click_bait/evaluate_clickbait.csv
 output_phrases
 resources/starters/used_phrases.json
