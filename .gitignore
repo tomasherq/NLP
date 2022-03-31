@@ -9,3 +9,4 @@ resources/fake_news/total/*
 resources/click_bait/*
 !resources/click_bait/click_bait_phrases.json
 !resources/click_bait/read_baits.py
+output_phrases
