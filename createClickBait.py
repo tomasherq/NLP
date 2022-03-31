@@ -40,33 +40,13 @@ with open("resources/starters/starters.txt", "r") as file_read:
 
 
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-model = TFGPT2LMHeadModel.from_pretrained("./models/old_bait", pad_token_id=tokenizer.eos_token_id, from_pt=True)
+model = TFGPT2LMHeadModel.from_pretrained("./models/click_bait", pad_token_id=tokenizer.eos_token_id, from_pt=True)
 
 
 # encode context the generation is conditioned on
 input_ids = tokenizer.encode(initialText, return_tensors='tf')
 
-
-# generate text until the output length (which includes the context length) reaches 50
-# beam_output = model.generate(
-#     input_ids,
-#     max_length=MAX_LENGTH,
-#     num_beams=5,
-#     no_repeat_ngram_size=2,
-#     num_return_sequences=5,
-#     early_stopping=True
-# )
-
 initialText = initialText
-
-# # Top k
-# sample_outputs = model.generate(
-#     input_ids,
-#     do_sample=True,
-#     max_length=MAX_LENGTH,
-#     top_k=50
-# )
-
 
 # Top p
 sample_outputs = model.generate(

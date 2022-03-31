@@ -3,6 +3,8 @@ from transformers import AutoTokenizer, TrainingArguments, AutoModelForSequenceC
 from datasets import load_dataset, DatasetDict, load_metric
 import numpy as np
 
+# The test dataset is 25% of the phrases
+
 dataset = load_dataset('csv', data_files="../resources/click_bait/clickbait_data.csv", split='train')
 train_testvalid = dataset.train_test_split()
 test_valid = train_testvalid['test'].train_test_split()

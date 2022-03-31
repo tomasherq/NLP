@@ -48,7 +48,7 @@ def build_text_files(data_json, dest_path):
     f.write(data)
 
 
-train, test = train_test_split(data, test_size=0.15)
+train, test = train_test_split(data, test_size=0.3)
 build_text_files(train, train_path)
 build_text_files(test, test_path)
 
