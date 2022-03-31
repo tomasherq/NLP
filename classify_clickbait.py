@@ -21,16 +21,16 @@ MAX_LENGTH = 20
 
 classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
 
-classifiedFile = f"memory/classified_phrases_{MAX_LENGTH}.json"
+classifiedFile = f"clasification/memory/classified_phrases_{MAX_LENGTH}.json"
 classifiedPhrases = []
-if os.path.exist(classifiedFile):
+if os.path.exists(classifiedFile):
 
     classifiedPhrases = load_json_file(classifiedFile)
 
 
-labelsFile = f"results/labels_{MAX_LENGTH}.json"
+labelsFile = f"clasification/results/labels_{MAX_LENGTH}.json"
 labels = []
-if os.path.exist(labelsFile):
+if os.path.exists(labelsFile):
 
     labels = load_json_file(labelsFile)
 
