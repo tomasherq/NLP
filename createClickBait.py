@@ -46,9 +46,6 @@ model = TFGPT2LMHeadModel.from_pretrained("./models/old_bait", pad_token_id=toke
 # encode context the generation is conditioned on
 input_ids = tokenizer.encode(initialText, return_tensors='tf')
 
-# This way I get the same seed for all lengths and filenames ;)
-tf.random.set_seed(int(MAX_LENGTH)+filename)
-
 
 # generate text until the output length (which includes the context length) reaches 50
 # beam_output = model.generate(

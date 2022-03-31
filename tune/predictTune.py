@@ -8,8 +8,7 @@ train_testvalid = dataset.train_test_split()
 test_valid = train_testvalid['test'].train_test_split()
 train_test_valid_dataset = DatasetDict({
     'train': train_testvalid['train'],
-    'test': test_valid['test'],
-    'valid': test_valid['train']})
+    'test': test_valid['test']})
 
 
 tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")

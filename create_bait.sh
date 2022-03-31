@@ -6,6 +6,6 @@ i=0
 length=50
 while [ $i -le 1000 ]
 do
-  python3 useClickBait.py $length
+  python3 createClickBait.py $length
   ((i++))
 done
