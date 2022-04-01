@@ -12,3 +12,5 @@ resources/click_bait/*
 !resources/click_bait/evaluate_clickbait.csv
 output_phrases
 resources/starters/used_phrases.json
+
+titleGen.py

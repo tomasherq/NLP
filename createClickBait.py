@@ -4,7 +4,8 @@ from transformers import TFGPT2LMHeadModel, AutoTokenizer, AutoModelWithLMHead
 import sys
 import json
 import os
-
+import requests
+from random import randint
 
 MAX_LENGTH = 50
 directoryOutput = f'output_phrases/{MAX_LENGTH}'
@@ -35,13 +36,18 @@ while i < 1000:
         exit(1)
 
     initialText = ''
-    with open("resources/starters/starters.txt", "r") as file_read:
+    with open("resources/starters/words.json", "r") as file_read:
 
-        for line in file_read.readlines():
-            if line not in used_phrases[MAX_LENGTH]:
-                used_phrases[MAX_LENGTH].append(line)
-                initialText = line
+        words = json.load(file_read)
+        randomNumber = randint(0, len(words)-1)
+        while(True):
+
+            initialText = words[randomNumber]
+            if words[randomNumber] not in used_phrases[MAX_LENGTH]:
+                initialText = words[randomNumber]
+
                 break
+            randomNumber += 1
     # encode context the generation is conditioned on
     input_ids = tokenizer.encode(initialText, return_tensors='tf')
     # Top p
@@ -49,8 +55,7 @@ while i < 1000:
         input_ids,
         do_sample=True,
         max_length=int(MAX_LENGTH),
-        top_k=50,
-        top_p=0.95,
+        top_k=0,
         num_return_sequences=5,
         early_stopping=True
     )
@@ -59,7 +64,7 @@ while i < 1000:
 
     with open(f"{directoryOutput}/{filename}.json", "w") as file_write:
         for beam_output in (sample_outputs):
-            text_clean = tokenizer.decode(beam_output, skip_special_tokens=True).split(initialText)[1].strip()
+            text_clean = tokenizer.decode(beam_output, skip_special_tokens=True).strip().capitalize()
 
             output_texts.append(text_clean)
         file_write.write(json.dumps(output_texts, indent=4))
