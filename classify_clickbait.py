@@ -24,8 +24,6 @@ tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 model = AutoModelForSequenceClassification.from_pretrained("models/predict")
 MAX_LENGTH = 20
 
-# Create the classifier
-classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
 
 # File to keep record of the classified files
 classifiedFile = f"clasification/memory/classified_phrases_{MAX_LENGTH}.json"
@@ -41,6 +39,9 @@ if os.path.exists(labelsFile):
 
     labels = load_json_file(labelsFile)
 
+
+# Create the classifier
+classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
 
 # Directory of the phrases
 phrasesDirectory = f"output_phrases/{MAX_LENGTH}"
