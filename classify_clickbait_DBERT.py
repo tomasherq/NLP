@@ -36,7 +36,6 @@ if os.path.exists(classifiedFile):
 labelsFile = f"clasification/results/labels_{MAX_LENGTH}.json"
 labels = []
 if os.path.exists(labelsFile):
-
     labels = load_json_file(labelsFile)
 
 
