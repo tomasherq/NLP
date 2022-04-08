@@ -14,7 +14,7 @@ nltk.download('wordnet')
 nltk.download('omw-1.4')
 
 # Read the training and test data to use
-train_data = pd.read_json('resources/click_bait/click_bait_phrases.json')
+train_data = pd.read_csv('resources/click_bait/clickbait_data.csv')
 test_data = pd.read_csv('resources/click_bait/evaluate_clickbait.csv')
 
 # Making two Series with the clickbait and label for the training data
