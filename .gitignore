@@ -12,6 +12,7 @@ resources/click_bait/*
 output_phrases
 .idea
 venv
+venv2
 !resources/click_bait/click_bait_phrases.json
 !resources/click_bait/evaluate_clickbait.csv
 output_phrases
