@@ -14,16 +14,17 @@ nltk.download('wordnet')
 nltk.download('omw-1.4')
 
 # Read the training and test data to use
-train_data = pd.read_csv('resources/click_bait/evaluate_clickbait.csv')
-test_data = pd.read_json('resources/click_bait/4.json')
+train_data = pd.read_json('resources/click_bait/click_bait_phrases.json')
+test_data = pd.read_csv('resources/click_bait/evaluate_clickbait.csv')
 
 # Making two Series with the clickbait and label for the training data
-train_clickbait = train_data.title
+train_clickbait = train_data.text
 train_labels = train_data.label
 
 # Making two Series with the clickbait and label for the testing data
 test_clickbait = test_data.iloc[:, 0]
-test_labels = pd.Series([1] * len(test_data)) # All labels are 1 as all test items are click-bait in our test
+test_labels = test_data.iloc[:,1]
+
 
 # Splits the click-bait string into a list of tokens
 def tokenization(text):
@@ -133,8 +134,8 @@ end_time = time.time()
 # Performing prediction
 pred = NB_MN.predict(test_arr)
 
-print('First actual labels (limit 20 labels):\t\t', test_labels.tolist()[:20])
-print('First predicted labels (limit 20 labels):\t', pred.tolist()[:20])
+print('First actual labels (limit 20 labels):\t\t', test_labels.tolist()[:100])
+print('First predicted labels (limit 20 labels):\t', pred.tolist()[:100])
 
 print(f"Accuracy of the model is {accuracy_score(test_labels, pred)}")
 print(f"Training time is {end_time - start_time}")
