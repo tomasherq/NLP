@@ -32,6 +32,7 @@ def load_dataset(train_path, test_path, tokenizer):
         file_path=test_path,
         block_size=128)
 
+    # The data collator creates batches withthe data that is fed to it
     data_collator = DataCollatorForLanguageModeling(
         tokenizer=tokenizer, mlm=False,
     )
@@ -50,6 +51,8 @@ def build_text_files(data_json, dest_path):
             data += summary + "  "
     f.write(data)
 
+# Metrics we want to measure for the model (not used in this case)
+
 
 def compute_metrics(eval_pred):
 
@@ -67,11 +70,13 @@ build_text_files(train, train_path)
 build_text_files(test, test_path)
 
 
+# We get the train and test datasets
 train_dataset, test_dataset, data_collator = load_dataset(train_path, test_path, tokenizer)
 
-
+# Load the model
 model = AutoModelWithLMHead.from_pretrained("gpt2")
 
+# Set the trainning arguments
 training_args = TrainingArguments(
     output_dir="../models/click_bait",  # The output directory
     overwrite_output_dir=True,  # overwrite the content of the output directory
@@ -83,6 +88,7 @@ training_args = TrainingArguments(
     warmup_steps=500,  # number of warmup steps for learning rate scheduler
 )
 
+# Start the trainer, then train the model and save it.
 trainer = Trainer(
     model=model,
     args=training_args,

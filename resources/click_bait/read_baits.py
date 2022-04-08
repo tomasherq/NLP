@@ -1,19 +1,19 @@
 import json
-import csv
-from textwrap import indent
 
 labels = {}
 
-# Read from one dataset
-
+# Read from one dataset and get the indices of the phrases
+# that are classified as clickbaits.
 with open("truth.jsonl", "r") as file_read:
 
     for line in file_read:
         content = json.loads(line)
         labels[content['id']] = content['truthClass'] == "clickbait"
 
-clickbaitPhrases = list()
 
+# Read from another dataset and get the indices texts
+# of the phrases that are classified as clickbait.
+clickbaitPhrases = list()
 with open("instances.jsonl", "r") as file_read:
 
     for line in file_read:
@@ -23,10 +23,6 @@ with open("instances.jsonl", "r") as file_read:
 
             clickbaitPhrases.append({"text": content['postText'][0], "label": labels[content["id"]]})
 
-# with open("clickbait_data.csv", "r") as file_read:
-#     readercsv = csv.reader(file_read, delimiter=',')
-#     for row in readercsv:
-#         clickbaitPhrases.append({"text": row[0], "label": row[1] == 1})
-
+# Store the clickbait phrases in a JSON to tune the text generation model
 with open("click_bait_phrases.json", "w") as file_write:
     file_write.write(json.dumps(clickbaitPhrases, indent=4))

@@ -1,5 +1,4 @@
 test_trainer
-
 cached*
 resources/clickbait
 tune/t*
@@ -17,3 +16,5 @@ venv2
 !resources/click_bait/evaluate_clickbait.csv
 output_phrases
 resources/starters/used_phrases.json
+titleGen.py
+
