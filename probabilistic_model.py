@@ -25,19 +25,18 @@ def write_json(filename, dict_to_print):
         return file_write.write(json.dumps(dict_to_print, indent=4))
 
 
-start_time = time.time()
 
 # Read the training and test data to use
 train_data = pd.read_csv('resources/click_bait/clickbait_data.csv')
-test_data = pd.read_csv('resources/click_bait/evaluate_clickbait.csv')
+# test_data = pd.read_csv('resources/click_bait/evaluate_clickbait.csv')
 
 # Making two Series with the clickbait and label for the training data
 train_clickbait = train_data.text
 train_labels = train_data.label
 
-# Making two Series with the clickbait and label for the testing data
-test_clickbait = test_data.iloc[:, 0]
-test_labels = test_data.iloc[:, 1]
+# # Making two Series with the clickbait and label for the testing data
+# test_clickbait = test_data.iloc[:, 0]
+# test_labels = test_data.iloc[:, 1]
 
 
 # Splits the click-bait string into a list of tokens
@@ -119,87 +118,102 @@ train_clickbait = train_clickbait.apply(tokenization) \
     .apply(remove_spaces) \
     .apply(lemmatzation)
 
-# Applying data transformations to test data
-test_clickbait = test_clickbait.apply(tokenization) \
-    .apply(lowercasing) \
-    .apply(remove_punctuations) \
-    .apply(remove_numbers) \
-    .apply(remove_stopwords) \
-    .apply(remove_spaces) \
-    .apply(lemmatzation)
 
 # Turning tokens list to string again
 train_clickbait = train_clickbait.apply(lambda x: ''.join(i + ' ' for i in x))
-test_clickbait = test_clickbait.apply(lambda x: ''.join(i + ' ' for i in x))
+
 
 # Using TfidfVectorizer to convert click-bait text into features
 tfidf = TfidfVectorizer()
 train_clickbait_1 = tfidf.fit_transform(train_clickbait)
-test_clickbait_1 = tfidf.transform(test_clickbait)
 
-print(f"Number of features extracted: {len(tfidf.get_feature_names())}")
-# print("The 100 features extracted from TF-IDF ")
-# print(tfidf.get_feature_names()[:100])
-
-# print("Shape of train set", train_clickbait_1.shape)
-# print("Shape of test set", test_clickbait_1.shape)
+# print(f"Number of features extracted: {len(tfidf.get_feature_names())}")
 
 # Preparing data for Naive Bayes Classifier
 train_arr = train_clickbait_1.toarray()
-test_arr = test_clickbait_1.toarray()
 
 # Training the model
 NB_MN = MultinomialNB()
 NB_MN.fit(train_arr, train_labels)
 
-# Performing prediction
-print(test_arr)
-pred = NB_MN.predict(test_arr)
-
-end_time = time.time()
-
 # print('First actual labels (limit 20 labels):\t\t', test_labels.tolist()[:100])
 # print('First predicted labels (limit 20 labels):\t', pred.tolist()[:100])
 
-print(f"Accuracy of the model is {accuracy_score(test_labels, pred)}")
-print(f"Finished in {end_time - start_time} seconds")
+clickbait_lengths = [15, 20, 25]
 
-MAX_LENGTH = 15
+for length in clickbait_lengths:
+    MAX_LENGTH = length
 
-# File to keep record of the classified files
-classifiedFile = f"classification/memory/classified_phrases_prob_{MAX_LENGTH}.json"
-classifiedPhrases = []
-if os.path.exists(classifiedFile):
-    classifiedPhrases = load_json_file(classifiedFile)
+    # File to keep record of the classified files
+    classifiedFile = f"classification/memory/classified_phrases_prob_{MAX_LENGTH}.json"
+    classifiedPhrases = []
+    if os.path.exists(classifiedFile):
+        classifiedPhrases = load_json_file(classifiedFile)
 
-# File to keep record of all the labels for the phrases
-labelsFile = f"classification/results/labels_prob_{MAX_LENGTH}.json"
-labels = []
-if os.path.exists(labelsFile):
-    labels = load_json_file(labelsFile)
+    # File to keep record of all the labels for the phrases
+    labelsFile = f"classification/results/labels_prob_{MAX_LENGTH}.json"
+    labels = []
+    if os.path.exists(labelsFile):
+        labels = load_json_file(labelsFile)
 
 
-# Directory of the phrases
-phrasesDirectory = f"output_phrases/{MAX_LENGTH}"
-for file in os.listdir(phrasesDirectory):
+    # Directory of the phrases
+    phrasesDirectory = f"output_phrases/{MAX_LENGTH}"
+    accuracies = []
+    running_times = []
 
-    if file not in classifiedPhrases:
-        file_location = phrasesDirectory+"/"+file
-        sentences = load_json_file(file_location)
+    for file in os.listdir(phrasesDirectory):
 
-        # Analyze if the phrase is clickbait
-        for sentence in sentences:
-            print(sentence)
-            result = NB_MN.predict(sentence)
-            print(result)
-            label = 1
-            if "0" in result["label"]:
-                label = 0
+        if file not in classifiedPhrases:
+            file_location = phrasesDirectory+"/"+file
+            sentences = load_json_file(file_location)
 
-            labels.append(label)
+            test_clickbait = pd.read_json(file_location).iloc[:,0]
+            test_labels = pd.Series([1] * len(test_clickbait))
 
-        # Write the results and that the file has been analyzed
-        classifiedPhrases.append(file)
+            # Write the results and that the file has been analyzed
+            classifiedPhrases.append(file)
 
-        write_json(classifiedFile, classifiedPhrases)
-        write_json(labelsFile, labels)
+            # Start timer is at the data preprocessing
+            start_time = time.time()
+
+            # Applying data transformations to test data
+            test_clickbait = test_clickbait.apply(tokenization)\
+                .apply(lowercasing) \
+                .apply(remove_punctuations) \
+                .apply(remove_numbers) \
+                .apply(remove_stopwords) \
+                .apply(remove_spaces) \
+                .apply(lemmatzation)
+
+
+            # Turning tokens list to string again
+            test_clickbait = test_clickbait.apply(lambda x: ''.join(i + ' ' for i in x))
+
+            # Using TfidfVectorizer to convert click-bait text into features
+            test_clickbait_1 = tfidf.transform(test_clickbait)
+
+            # Preparing data for Naive Bayes Classifier
+            test_arr = test_clickbait_1.toarray()
+
+            # Performing prediction
+            pred = NB_MN.predict(test_arr)
+
+            # End time of the predication for current file
+            end_time = time.time()
+
+            # print(f"Accuracy of the model is {accuracy_score(test_labels, pred)}")
+            # print(f"Finished in {end_time - start_time} seconds")
+
+            # Appending accuracy and running time for current file to calculate the average at the end
+            accuracies.append(accuracy_score(test_labels, pred))
+            running_times.append(end_time - start_time)
+
+
+    # Calculating average accuracy and running time
+    average_accuracy = sum(accuracies) / len(accuracies)
+    average_running_time = sum(running_times) / len(running_times)
+
+    print(f"Average accuracy of the predication for clickbait with length {MAX_LENGTH} is {average_accuracy}")
+    print(f"Average running time of the predication for clickbait with length {MAX_LENGTH} is {average_running_time}")
+    print("\n")
