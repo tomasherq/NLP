@@ -142,6 +142,9 @@ NB_MN.fit(train_arr, train_labels)
 clickbait_lengths = [15, 20, 25]
 
 for length in clickbait_lengths:
+
+    # Start timer is at the data preprocessing
+    start_time = time.time()
     MAX_LENGTH = length
 
     # File to keep record of the classified files
@@ -173,9 +176,6 @@ for length in clickbait_lengths:
 
             # Write the results and that the file has been analyzed
             classifiedPhrases.append(file)
-
-            # Start timer is at the data preprocessing
-            start_time = time.time()
 
             # Applying data transformations to test data
             test_clickbait = test_clickbait.apply(tokenization)\
@@ -215,5 +215,5 @@ for length in clickbait_lengths:
     average_running_time = sum(running_times) / len(running_times)
 
     print(f"Average accuracy of the predication for clickbait with length {MAX_LENGTH} is {average_accuracy}")
-    print(f"Average running time of the predication for clickbait with length {MAX_LENGTH} is {average_running_time}")
+    print(f"Running time of the predication for clickbait with length {MAX_LENGTH} is {time.time() - start_time}")
     print("\n")
