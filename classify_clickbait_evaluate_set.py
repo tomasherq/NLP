@@ -2,6 +2,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipe
 import csv
 from sklearn.metrics import confusion_matrix
 import time
+import pandas as pd
 
 # Load the tokenizer and the model
 tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
@@ -13,24 +14,36 @@ results = []
 labels = []
 
 start = time.time()
-with open('resources/click_bait/evaluate_clickbait.csv', "r", encoding="utf8") as f:
-    lines = csv.reader(f)
-    next(lines, None)
-    for line in lines:
-        res = classifier(line[0])
-        labels.append(int(line[1]))
+clickbait = pd.read_csv("resources/click_bait/clickbait.csv", usecols=['Video Title'])
+clickbait['label'] = 1
 
-        label = 1
-        if "0" in res[0]["label"]:
-            label = 0
-        results.append(label)
+not_clickbait = pd.read_csv("resources/click_bait/notClickbait.csv", usecols=['Video Title'])
+not_clickbait['label'] = 0
 
-    tn, fp, fn, tp = confusion_matrix(labels, results).ravel()
+concatenated = [clickbait, not_clickbait]
 
-    print("True Negative: ", tn)
-    print("False Negative: ", fn)
-    print("True Positive: ", tp)
-    print("False Positive: ", fp)
-    print()
-    print("Accuracy: ", (tp + tn) / (tp + tn + fp + fn))
-    print("Elapsed time: ", time.time() - start)
+test_set = pd.concat(concatenated)
+
+test_set.reset_index()
+
+for index, line in test_set.iterrows():
+
+    res = classifier(line['Video Title'])
+    labels.append(line['label'])
+
+    label = 1
+    if "0" in res[0]["label"]:
+        label = 0
+    results.append(label)
+
+print(results)
+print(labels)
+tn, fp, fn, tp = confusion_matrix(labels, results).ravel()
+
+print("True Negative: ", tn)
+print("False Negative: ", fn)
+print("True Positive: ", tp)
+print("False Positive: ", fp)
+print()
+print("Accuracy: ", (tp + tn) / (tp + tn + fp + fn))
+print("Elapsed time: ", time.time() - start)
