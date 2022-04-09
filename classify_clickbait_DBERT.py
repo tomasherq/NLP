@@ -26,14 +26,14 @@ MAX_LENGTH = 20
 
 
 # File to keep record of the classified files
-classifiedFile = f"clasification/memory/classified_phrases_{MAX_LENGTH}.json"
+classifiedFile = f"classification/memory/classified_phrases_prob_{MAX_LENGTH}.json"
 classifiedPhrases = []
 if os.path.exists(classifiedFile):
 
     classifiedPhrases = load_json_file(classifiedFile)
 
 # File to keep record of all the labels for the phrases
-labelsFile = f"clasification/results/labels_{MAX_LENGTH}.json"
+labelsFile = f"classification/results/labels_{MAX_LENGTH}.json"
 labels = []
 if os.path.exists(labelsFile):
     labels = load_json_file(labelsFile)
