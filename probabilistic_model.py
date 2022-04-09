@@ -211,6 +211,8 @@ for length in clickbait_lengths:
 
 
     # Calculating average accuracy and running time
+    print(sum(predictions))
+    print(len(predictions))
     average_accuracy = sum(predictions) / len(predictions)
     average_running_time = sum(running_times) / len(running_times)
 
