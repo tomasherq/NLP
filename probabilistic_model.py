@@ -162,7 +162,7 @@ for length in clickbait_lengths:
 
     # Directory of the phrases
     phrasesDirectory = f"output_phrases/{MAX_LENGTH}"
-    accuracies = []
+    predictions = []
     running_times = []
 
     for file in os.listdir(phrasesDirectory):
@@ -206,12 +206,12 @@ for length in clickbait_lengths:
             # print(f"Finished in {end_time - start_time} seconds")
 
             # Appending accuracy and running time for current file to calculate the average at the end
-            accuracies.append(accuracy_score(test_labels, pred))
+            predictions.extend(pred.tolist())
             running_times.append(end_time - start_time)
 
 
     # Calculating average accuracy and running time
-    average_accuracy = sum(accuracies) / len(accuracies)
+    average_accuracy = sum(predictions) / len(predictions)
     average_running_time = sum(running_times) / len(running_times)
 
     print(f"Average accuracy of the predication for clickbait with length {MAX_LENGTH} is {average_accuracy}")
