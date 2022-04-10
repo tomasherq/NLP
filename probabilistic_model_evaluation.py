@@ -26,7 +26,7 @@ test_set = pd.concat(concatenated)
 test_set.reset_index()
 
 # Read the training and test data to use
-train_set = pd.read_json('resources/click_bait/click_bait_phrases.json')
+train_set = pd.read_csv('resources/click_bait/clickbait_data.csv')
 
 
 # Making two Series with the clickbait and label for the training data
